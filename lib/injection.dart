@@ -26,6 +26,7 @@ import 'package:ditonton/domain/usecases/tv_usecase/get_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/tv_usecase/remove_tv.dart';
 import 'package:ditonton/domain/usecases/tv_usecase/save_tv.dart';
 import 'package:ditonton/domain/usecases/tv_usecase/search_tv.dart';
+import 'package:ditonton/presentation/provider/movie_provider/movie_search_bloc/search_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_provider/movie_search_notifier.dart';
@@ -36,6 +37,7 @@ import 'package:ditonton/presentation/provider/tv_provider/tv_detail_notifier.da
 import 'package:ditonton/presentation/provider/tv_provider/tv_list_notifer.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_on_air_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_popular_notifer.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_search_bloc/tv_search_bloc.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_search_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_top_rated_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_provider/watchlist_tv_notifier.dart';
@@ -122,6 +124,18 @@ void init() {
   locator.registerFactory(
     () => WatchlistTvNotifier(
       getWatchlistTv: locator(),
+    ),
+  );
+
+  // bloc
+  locator.registerFactory(
+    () => SearchBloc(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => TvSearchBloc(
+      locator(),
     ),
   );
 

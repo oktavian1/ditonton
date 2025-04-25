@@ -11,6 +11,7 @@ import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
+import 'package:ditonton/presentation/provider/movie_provider/movie_search_bloc/search_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_provider/movie_search_notifier.dart';
@@ -21,11 +22,13 @@ import 'package:ditonton/presentation/provider/tv_provider/tv_detail_notifier.da
 import 'package:ditonton/presentation/provider/tv_provider/tv_list_notifer.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_on_air_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_popular_notifer.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_search_bloc/tv_search_bloc.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_search_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_provider/tv_top_rated_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_provider/watchlist_tv_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
 
@@ -77,6 +80,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<WatchlistTvNotifier>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<SearchBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<TvSearchBloc>(),
         ),
       ],
       child: MaterialApp(

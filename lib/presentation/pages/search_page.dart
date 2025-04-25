@@ -1,10 +1,17 @@
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/movie_provider/movie_search_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_provider/tv_search_notifier.dart';
+import 'package:ditonton/presentation/provider/movie_provider/movie_search_bloc/search_bloc.dart';
+import 'package:ditonton/presentation/provider/movie_provider/movie_search_bloc/search_event.dart'
+    as movieEvent;
+import 'package:ditonton/presentation/provider/movie_provider/movie_search_bloc/search_state.dart'
+    as movieState;
+import 'package:ditonton/presentation/provider/tv_provider/tv_search_bloc/tv_search_bloc.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_search_bloc/tv_search_event.dart'
+    as tvEvent;
+import 'package:ditonton/presentation/provider/tv_provider/tv_search_bloc/tv_search_state.dart'
+    as tvState;
 import 'package:ditonton/presentation/widgets/media_card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchPage extends StatefulWidget {
   static const ROUTE_NAME = '/search';
@@ -28,16 +35,10 @@ class _SearchPageState extends State<SearchPage>
   }
 
   void _onSearch(String query) {
-    setState(() {
-      _query = query;
-    });
-
     if (_tabController.index == 0) {
-      Provider.of<MovieSearchNotifier>(context, listen: false)
-          .fetchMovieSearch(query);
+      context.read<SearchBloc>().add(movieEvent.OnQueryChanged(query));
     } else {
-      Provider.of<TvSearchNotifier>(context, listen: false)
-          .fetchTvsSearch(query);
+      context.read<TvSearchBloc>().add(tvEvent.OnQueryChanged(query));
     }
   }
 
@@ -50,9 +51,6 @@ class _SearchPageState extends State<SearchPage>
 
   @override
   Widget build(BuildContext context) {
-    final movieSearchNotifier = Provider.of<MovieSearchNotifier>(context);
-    final tvSearchNotifier = Provider.of<TvSearchNotifier>(context);
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -73,6 +71,17 @@ class _SearchPageState extends State<SearchPage>
               TextField(
                 controller: _controller,
                 onSubmitted: _onSearch,
+                onChanged: (query) {
+                  if (_tabController.index == 0) {
+                    context
+                        .read<SearchBloc>()
+                        .add(movieEvent.OnQueryChanged(query));
+                  } else {
+                    context
+                        .read<TvSearchBloc>()
+                        .add(tvEvent.OnQueryChanged(query));
+                  }
+                },
                 decoration: const InputDecoration(
                   hintText: 'Search title...',
                   prefixIcon: Icon(Icons.search),
@@ -87,8 +96,8 @@ class _SearchPageState extends State<SearchPage>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    _buildMovieResult(movieSearchNotifier),
-                    _buildTvResult(tvSearchNotifier),
+                    _buildMovieResult(),
+                    _buildTvResult(),
                   ],
                 ),
               ),
@@ -99,35 +108,49 @@ class _SearchPageState extends State<SearchPage>
     );
   }
 
-  Widget _buildMovieResult(MovieSearchNotifier notifier) {
-    if (notifier.state == RequestState.Loading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (notifier.state == RequestState.Loaded) {
-      return ListView.builder(
-        itemCount: notifier.searchResult.length,
-        itemBuilder: (context, index) {
-          final movie = notifier.searchResult[index];
-          return MediaCardList(item: movie);
-        },
-      );
-    } else {
-      return const Center(child: Text('No results'));
-    }
+  Widget _buildMovieResult() {
+    return BlocBuilder<SearchBloc, movieState.SearchState>(
+      builder: (context, state) {
+        if (state is movieState.SearchLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is movieState.SearchHasData) {
+          final result = state.result;
+          return ListView.builder(
+            itemCount: result.length,
+            itemBuilder: (context, index) {
+              final movie = result[index];
+              return MediaCardList(item: movie);
+            },
+          );
+        } else if (state is movieState.SearchError) {
+          return Center(child: Text(state.message));
+        } else {
+          return const Center(child: Text('No results'));
+        }
+      },
+    );
   }
 
-  Widget _buildTvResult(TvSearchNotifier notifier) {
-    if (notifier.state == RequestState.Loading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (notifier.state == RequestState.Loaded) {
-      return ListView.builder(
-        itemCount: notifier.searchResult.length,
-        itemBuilder: (context, index) {
-          final tv = notifier.searchResult[index];
-          return MediaCardList(item: tv);
-        },
-      );
-    } else {
-      return const Center(child: Text('No results'));
-    }
+  Widget _buildTvResult() {
+    return BlocBuilder<TvSearchBloc, tvState.TvSearchState>(
+      builder: (context, state) {
+        if (state is tvState.SearchLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is tvState.SearchHasData) {
+          final result = state.result;
+          return ListView.builder(
+            itemCount: result.length,
+            itemBuilder: (context, index) {
+              final movie = result[index];
+              return MediaCardList(item: movie);
+            },
+          );
+        } else if (state is tvState.SearchError) {
+          return Center(child: Text(state.message));
+        } else {
+          return const Center(child: Text('No results'));
+        }
+      },
+    );
   }
 }

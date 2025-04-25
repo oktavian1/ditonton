@@ -100,7 +100,7 @@ class TvDetailResponse extends Equatable {
         id: json["id"],
         inProduction: json["in_production"],
         languages: List<String>.from(json["languages"]),
-        lastAirDate: json["last_air_date"],
+        lastAirDate: json["last_air_date"] ?? '',
         lastEpisodeToAir: json["last_episode_to_air"] != null
             ? LastEpisodeModel.fromJson(json["last_episode_to_air"])
             : null,
@@ -118,7 +118,7 @@ class TvDetailResponse extends Equatable {
         originalName: json["original_name"],
         overview: json["overview"],
         popularity: (json["popularity"] ?? 0).toDouble(),
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] ?? '',
         productionCompanies: List<ProductionCompanyModel>.from(
           json["production_companies"].map(
             (x) => ProductionCompanyModel.fromJson(x),
