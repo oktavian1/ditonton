@@ -1,0 +1,43 @@
+{
+    "page": 1,
+    "results": [
+        {
+            "adult": false,
+            "backdrop_path": null,
+            "genre_ids": [],
+            "id": 285667,
+            "origin_country": [
+                "US"
+            ],
+            "original_language": "en",
+            "original_name": "Naruto Highschool",
+            "overview": "Naruto Highschool - Following the adventures of Suvika and his bestfriend Naruto",
+            "popularity": 0.2145,
+            "poster_path": null,
+            "first_air_date": "2022-06-30",
+            "name": "Naruto Highschool",
+            "vote_average": 0,
+            "vote_count": 0
+        },
+        {
+            "adult": false,
+            "backdrop_path": null,
+            "genre_ids": [],
+            "id": 289431,
+            "origin_country": [
+                "US"
+            ],
+            "original_language": "en",
+            "original_name": "Rebuild of Naruto",
+            "overview": "The Rebuild of Naruto project is a complete re-edit of the entire Naruto anime with the benefit of hindsight of the complete story. The goal is to provide the definitive viewing experience of Naruto -- for both old and new viewers. Each arc is presented as a film/series of films. Meaning, episodes are seamlessly stitched together to create a naturally flowing story arc. In addition to that, all unnecessary filler, fluff, and padding are cut.",
+            "popularity": 0.4168,
+            "poster_path": "/xTlTjTL0oF4ticC5KRZyO7viGff.jpg",
+            "first_air_date": "",
+            "name": "Rebuild of Naruto",
+            "vote_average": 0,
+            "vote_count": 0
+        }
+    ],
+    "total_pages": 1,
+    "total_results": 8
+}
