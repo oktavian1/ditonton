@@ -1,8 +1,9 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/tv_provider/tv_on_air_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_on_air_bloc/tv_on_air_bloc.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_on_air_bloc/tv_on_air_event.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_on_air_bloc/tv_on_air_state.dart';
 import 'package:ditonton/presentation/widgets/media_card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OnAirTvPage extends StatefulWidget {
   static const ROUTE_NAME = '/on-air-tv';
@@ -15,8 +16,7 @@ class _OnAirTvPagePageState extends State<OnAirTvPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<TvOnAirNotifier>(context, listen: false).fetchOnAirTv());
+    context.read<TvOnAirBloc>().add(FetchTvOnAir());
   }
 
   @override
@@ -27,25 +27,25 @@ class _OnAirTvPagePageState extends State<OnAirTvPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TvOnAirNotifier>(
-          builder: (context, data, child) {
-            if (data.onAirTvState == RequestState.Loading) {
+        child: BlocBuilder<TvOnAirBloc, TvOnAirState>(
+          builder: (context, state) {
+            if (state is TvOnAirLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.onAirTvState == RequestState.Loaded) {
+            } else if (state is TvOnAirHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.onAirTv[index];
+                  final tv = state.tvs[index];
                   return MediaCardList(item: tv);
                 },
-                itemCount: data.onAirTv.length,
+                itemCount: state.tvs.length,
               );
-            } else {
+            } else if (state is TvOnAirError) {
               return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
-              );
+                  child: Text(key: Key('error_message'), state.message));
+            } else {
+              return Text('Failed');
             }
           },
         ),

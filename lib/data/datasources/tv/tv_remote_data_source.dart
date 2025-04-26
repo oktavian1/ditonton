@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ditonton/common/exception.dart';
+import 'package:ditonton/common/ssl_pinning.dart';
 import 'package:ditonton/data/models/tv/detail_model/tv_detail_model.dart';
 import 'package:ditonton/data/models/tv/tv_model.dart';
 import 'package:ditonton/data/models/tv/tv_response.dart';
@@ -22,6 +23,12 @@ class TvRemoteDataSourceImpl implements TvRemoteDataSource {
   final http.Client client;
 
   TvRemoteDataSourceImpl({required this.client});
+
+  static Future<TvRemoteDataSourceImpl> create() async {
+    final ioClient = await SslPinning.ioClient;
+    print('SSL TRIGGERED ON DATA SOURCE');
+    return TvRemoteDataSourceImpl(client: ioClient);
+  }
 
   @override
   Future<List<TvModel>> getPopularTv() async {
