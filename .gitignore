@@ -31,6 +31,11 @@
 .pub/
 /build/
 
+lib/generated_plugin_registrant.dart
+lib/firebase_options.dart
+ditonton.git
+ditonton.git.bfg-report
+
 # Web related
 lib/generated_plugin_registrant.dart
 
