@@ -1,26 +1,28 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/domain/entities/tv/tv.dart';
 import 'package:ditonton/presentation/pages/on_air_tv_page.dart';
-import 'package:ditonton/presentation/provider/tv_provider/tv_on_air_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_on_air_bloc/tv_on_air_bloc.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_on_air_bloc/tv_on_air_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 
+import '../../../dummy_data/dummy_objects.dart';
 import 'on_air_tv_page_test.mocks.dart';
 
-@GenerateMocks([TvOnAirNotifier])
+@GenerateMocks([TvOnAirBloc])
 void main() {
-  late MockTvOnAirNotifier mockNotifier;
+  late MockTvOnAirBloc mockTvOnAirBloc;
 
   setUp(() {
-    mockNotifier = MockTvOnAirNotifier();
+    mockTvOnAirBloc = MockTvOnAirBloc();
+    // Stub stream kosong
+    when(mockTvOnAirBloc.stream).thenAnswer((_) => const Stream.empty());
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<TvOnAirNotifier>.value(
-      value: mockNotifier,
+    return BlocProvider<TvOnAirBloc>.value(
+      value: mockTvOnAirBloc,
       child: MaterialApp(
         home: body,
       ),
@@ -28,8 +30,8 @@ void main() {
   }
 
   testWidgets('Page should display center progress bar when loading',
-      (WidgetTester tester) async {
-    when(mockNotifier.onAirTvState).thenReturn(RequestState.Loading);
+      (tester) async {
+    when(mockTvOnAirBloc.state).thenReturn(TvOnAirLoading());
 
     final progressBarFinder = find.byType(CircularProgressIndicator);
     final centerFinder = find.byType(Center);
@@ -41,9 +43,8 @@ void main() {
   });
 
   testWidgets('Page should display ListView when data is loaded',
-      (WidgetTester tester) async {
-    when(mockNotifier.onAirTvState).thenReturn(RequestState.Loaded);
-    when(mockNotifier.onAirTv).thenReturn(<Tv>[]);
+      (tester) async {
+    when(mockTvOnAirBloc.state).thenReturn(TvOnAirHasData([testTv]));
 
     final listViewFinder = find.byType(ListView);
 
@@ -53,14 +54,14 @@ void main() {
   });
 
   testWidgets('Page should display text with message when Error',
-      (WidgetTester tester) async {
-    when(mockNotifier.onAirTvState).thenReturn(RequestState.Error);
-    when(mockNotifier.message).thenReturn('Error message');
+      (tester) async {
+    when(mockTvOnAirBloc.state).thenReturn(const TvOnAirError('Error message'));
 
-    final textFinder = find.byKey(Key('error_message'));
+    final textFinder = find.byKey(const Key('error_message'));
 
     await tester.pumpWidget(_makeTestableWidget(OnAirTvPage()));
 
     expect(textFinder, findsOneWidget);
+    expect(find.text('Error message'), findsOneWidget);
   });
 }

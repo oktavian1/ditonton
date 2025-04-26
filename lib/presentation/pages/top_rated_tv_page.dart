@@ -1,8 +1,9 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/tv_provider/tv_top_rated_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_top_rated_bloc/tv_top_rated_event.dart';
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_top_rated_bloc/tv_top_rated_state.dart';
 import 'package:ditonton/presentation/widgets/media_card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TopRatedTvPage extends StatefulWidget {
   static const ROUTE_NAME = '/top-rated-tv';
@@ -15,9 +16,7 @@ class _TopRatedTvsPageState extends State<TopRatedTvPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<TvTopRatedNotifier>(context, listen: false)
-            .fetchGetTopRatedTv());
+    context.read<TvTopRatedBloc>().add(FetchTvTopRated());
   }
 
   @override
@@ -28,25 +27,24 @@ class _TopRatedTvsPageState extends State<TopRatedTvPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TvTopRatedNotifier>(
-          builder: (context, data, child) {
-            if (data.topRatedTvState == RequestState.Loading) {
+        child: BlocBuilder<TvTopRatedBloc, TvTopRatedState>(
+          builder: (context, state) {
+            if (state is TvTopRatedLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.topRatedTvState == RequestState.Loaded) {
+            } else if (state is TvTopRatedHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.topRatedTv[index];
+                  final tv = state.tvs[index];
                   return MediaCardList(item: tv);
                 },
-                itemCount: data.topRatedTv.length,
+                itemCount: state.tvs.length,
               );
+            } else if (state is TvTopRatedError) {
+              return Center(child: Text(state.message));
             } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
-              );
+              return Text('Failed');
             }
           },
         ),

@@ -3,16 +3,17 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
-import 'dart:ui' as _i8;
+import 'dart:async' as _i5;
 
-import 'package:ditonton/common/state_enum.dart' as _i5;
-import 'package:ditonton/domain/entities/tv/tv.dart' as _i4;
 import 'package:ditonton/domain/usecases/tv_usecase/get_popular_tv.dart' as _i2;
-import 'package:ditonton/presentation/provider/tv_provider/tv_popular_notifer.dart'
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_popular_bloc/tv_popular_bloc.dart'
+    as _i4;
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_popular_bloc/tv_popular_event.dart'
+    as _i6;
+import 'package:ditonton/presentation/provider/tv_provider/tv_list_bloc/tv_popular_bloc/tv_popular_state.dart'
     as _i3;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -37,11 +38,22 @@ class _FakeGetPopularTv_0 extends _i1.SmartFake implements _i2.GetPopularTv {
         );
 }
 
-/// A class which mocks [TvPopularNotifer].
+class _FakeTvPopularState_1 extends _i1.SmartFake
+    implements _i3.TvPopularState {
+  _FakeTvPopularState_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [TvPopularBloc].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTvPopularNotifer extends _i1.Mock implements _i3.TvPopularNotifer {
-  MockTvPopularNotifer() {
+class MockTvPopularBloc extends _i1.Mock implements _i4.TvPopularBloc {
+  MockTvPopularBloc() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -55,74 +67,125 @@ class MockTvPopularNotifer extends _i1.Mock implements _i3.TvPopularNotifer {
       ) as _i2.GetPopularTv);
 
   @override
-  List<_i4.Tv> get popularTv => (super.noSuchMethod(
-        Invocation.getter(#popularTv),
-        returnValue: <_i4.Tv>[],
-      ) as List<_i4.Tv>);
-
-  @override
-  _i5.RequestState get popularTvState => (super.noSuchMethod(
-        Invocation.getter(#popularTvState),
-        returnValue: _i5.RequestState.Empty,
-      ) as _i5.RequestState);
-
-  @override
-  String get message => (super.noSuchMethod(
-        Invocation.getter(#message),
-        returnValue: _i6.dummyValue<String>(
+  _i3.TvPopularState get state => (super.noSuchMethod(
+        Invocation.getter(#state),
+        returnValue: _FakeTvPopularState_1(
           this,
-          Invocation.getter(#message),
+          Invocation.getter(#state),
         ),
-      ) as String);
+      ) as _i3.TvPopularState);
 
   @override
-  bool get hasListeners => (super.noSuchMethod(
-        Invocation.getter(#hasListeners),
+  _i5.Stream<_i3.TvPopularState> get stream => (super.noSuchMethod(
+        Invocation.getter(#stream),
+        returnValue: _i5.Stream<_i3.TvPopularState>.empty(),
+      ) as _i5.Stream<_i3.TvPopularState>);
+
+  @override
+  bool get isClosed => (super.noSuchMethod(
+        Invocation.getter(#isClosed),
         returnValue: false,
       ) as bool);
 
   @override
-  _i7.Future<void> fetchTvPopularTv() => (super.noSuchMethod(
+  void add(_i6.TvPopularEvent? event) => super.noSuchMethod(
         Invocation.method(
-          #fetchTvPopularTv,
-          [],
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
-
-  @override
-  void addListener(_i8.VoidCallback? listener) => super.noSuchMethod(
-        Invocation.method(
-          #addListener,
-          [listener],
+          #add,
+          [event],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeListener(_i8.VoidCallback? listener) => super.noSuchMethod(
+  void onEvent(_i6.TvPopularEvent? event) => super.noSuchMethod(
         Invocation.method(
-          #removeListener,
-          [listener],
+          #onEvent,
+          [event],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void dispose() => super.noSuchMethod(
+  void emit(_i3.TvPopularState? state) => super.noSuchMethod(
         Invocation.method(
-          #dispose,
-          [],
+          #emit,
+          [state],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void notifyListeners() => super.noSuchMethod(
+  void on<E extends _i6.TvPopularEvent>(
+    _i7.EventHandler<E, _i3.TvPopularState>? handler, {
+    _i7.EventTransformer<E>? transformer,
+  }) =>
+      super.noSuchMethod(
         Invocation.method(
-          #notifyListeners,
+          #on,
+          [handler],
+          {#transformer: transformer},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onTransition(
+          _i7.Transition<_i6.TvPopularEvent, _i3.TvPopularState>? transition) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #onTransition,
+          [transition],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i5.Future<void> close() => (super.noSuchMethod(
+        Invocation.method(
+          #close,
           [],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  void onChange(_i7.Change<_i3.TvPopularState>? change) => super.noSuchMethod(
+        Invocation.method(
+          #onChange,
+          [change],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addError(
+    Object? error, [
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addError,
+          [
+            error,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onError(
+    Object? error,
+    StackTrace? stackTrace,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #onError,
+          [
+            error,
+            stackTrace,
+          ],
         ),
         returnValueForMissingStub: null,
       );

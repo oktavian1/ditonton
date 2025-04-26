@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ditonton/common/ssl_pinning.dart';
 import 'package:ditonton/data/models/movie/movie_detail_model.dart';
 import 'package:ditonton/data/models/movie/movie_model.dart';
 import 'package:ditonton/data/models/movie/movie_response.dart';
@@ -22,6 +23,11 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   final http.Client client;
 
   MovieRemoteDataSourceImpl({required this.client});
+  static Future<MovieRemoteDataSourceImpl> create() async {
+    final ioClient = await SslPinning.ioClient;
+    print('SSL TRIGGERED ON DATA SOURCE');
+    return MovieRemoteDataSourceImpl(client: ioClient);
+  }
 
   @override
   Future<List<MovieModel>> getNowPlayingMovies() async {
